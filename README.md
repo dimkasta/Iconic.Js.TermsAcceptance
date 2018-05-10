@@ -1,9 +1,16 @@
 # Iconic.Js.TermsAcceptance
 
 ```javascript
-var cookie = TermsService('cookies', '#cookieModal');
-cookie.init();
+var triggerModal = function (service) {
+        $(function () {
+            var modal = $(service.getElement());
+            modal.modal('show');
+            modal.on('hidden.bs.modal', service.accept);
+        });
+    };
 
-var gdpr = TermsService('gdpr', '#gdprModal');
-gdpr.init();
+    var cookie = TermsService('cookies', '#cookieModal', triggerModal);
+    cookie.init();
+    var gdpr = TermsService('gdpr', '#gdprModal', triggerModal);
+    gdpr.init();
 ```
