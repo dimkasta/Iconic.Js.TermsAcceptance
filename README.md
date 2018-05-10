@@ -1,7 +1,7 @@
 # Iconic.Js.TermsAcceptance
 
 ```javascript
-var triggerModal = function (service) {
+    var triggerModal = function (service) {
         $(function () {
             var modal = $(service.getElement());
             modal.modal('show');
