@@ -1,36 +1,32 @@
-var TermsService = function (name, modalName) {
-    if (typeof jQuery === 'undefined') {
-        console.error("MAKE SURE JQUERY IS LOADED BEFORE THE CONSENT SCRIPT")
-        return false;
-    }
-    else {
-        if ( typeof $().modal !== 'function') {
-            console.error("MAKE SURE BOOTSTRAP JS IS LOADED BEFORE THE CONSENT SCRIPT")
-            return false;
-        }
-    }
-
-    name = name + "_consent";
-
+var TermsService = function (name, element, triggerNotoficationCallback) {
     return {
         init: function() {
-            var self = this;
             if( ! this.isAccepted()){
-                $(function () {
-                    var modal = $(modalName);
-                    modal.modal('show');
-                    modal.on('hidden.bs.modal', self.accept);
-                });
+                triggerNotoficationCallback(this);
             }
         },
         isAccepted: function () {
-            return localStorage.getItem(name) === 'true';
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var cookies = decodedCookie.split(";");
+            for(var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                while(cookie.charAt(0) === " ") {
+                    cookie = cookie.substr(1);
+                }
+                if(cookie.indexOf(name) === 0) {
+                    return true;
+                }
+            }
+            return false;
         },
-        accept: function() {
-            localStorage.setItem(name, true);
+        accept: function () {
+            var now = new Date();
+            now.setTime(now.getTime() + 31536000000); //year
+            var expires = "expires=" + now.toUTCString();
+            document.cookie = name + "=" + 1 + ";" + expires + ";path=/";
         },
-        removeAcceptance: function() {
-            localStorage.setItem(name, false);
+        getElement: function () {
+            return element;
         }
     };
 };
